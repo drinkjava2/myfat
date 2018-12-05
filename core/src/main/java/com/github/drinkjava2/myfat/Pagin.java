@@ -1,4 +1,4 @@
-package com.github.drinkjava2.demo;
+package com.github.drinkjava2.myfat;
 
 import java.util.Properties;
 
@@ -37,7 +37,7 @@ public class Pagin implements Interceptor {
 	 * @param pageSize
 	 *            the size for each page
 	 */
-	public static PaginHandler pagin(int pageNo, int pageSize) {
+	public static PaginHandler set(int pageNo, int pageSize) {
 		paginData.set(new Object[] { pageNo, pageSize, null, false });
 		return JSQLBOX.pagin(pageNo, pageSize);
 	}
@@ -52,7 +52,7 @@ public class Pagin implements Interceptor {
 	 * @param dialect
 	 *            the jDialect dialect instance
 	 */
-	public static PaginHandler pagin(int pageNo, int pageSize, Dialect dialect) {
+	public static PaginHandler set(int pageNo, int pageSize, Dialect dialect) {
 		paginData.set(new Object[] { pageNo, pageSize, dialect, false });
 		return JSQLBOX.pagin(pageNo, pageSize);
 	}

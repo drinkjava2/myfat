@@ -1,6 +1,7 @@
 package com.github.drinkjava2.demo;
 
-import static com.github.drinkjava2.jsqlbox.JSQLBOX.*;
+import static com.github.drinkjava2.jsqlbox.JSQLBOX.gctx;
+import static com.github.drinkjava2.jsqlbox.JSQLBOX.iQueryForLongValue;
 
 import java.sql.Connection;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.drinkjava2.jsqlbox.SqlBoxContext;
+import com.github.drinkjava2.myfat.Pagin;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class TestDemo {
@@ -59,10 +61,10 @@ public class TestDemo {
 		try {
 			session = ConfigSqlSessionFactory().openSession();
 			Connection conn = session.getConnection();
-			Assert.assertEquals(100, iQueryForLongValue(conn, "select count(*) from users"));
+			Assert.assertEquals(100, iQueryForLongValue(conn,"select count(*) from users"));
 
 			List<Map<String, Object>> users;
-			Pagin.pagin(3, 10, gctx().getDialect());
+			Pagin.set(3, 10, gctx().getDialect());
 			users = session.getMapper(UserMapper.class).getOlderThan(50);
 			Assert.assertEquals(10, users.size());
 			for (Map<String, Object> map : users)
