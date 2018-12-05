@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ 
+ <groupId>com.github.drinkjava2</groupId>
+ <artifactId>myfat</artifactId>
+ <version>1.0</version> <!-- myfat1.0 = MyBatis 3.4.6+jsqlbox-java8 2.0.5 -->
+ <packaging>jar</packaging> 
+ 
+ <name>myfat</name>
+ <description>MyFat is the MyBatis function enhence plugin</description>
+ <url>https://github.com/drinkjava2/jbeanbox</url>
+  
+ <issueManagement>
+    <system>Github Issue</system>
+    <url>https://github.com/drinkjava2/myfat/issues</url>
+ </issueManagement>
+
+ <licenses>
+   <license>
+     <name>The Apache Software License, Version 2.0</name>
+     <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+   </license>
+ </licenses>
+
+ <developers>
+   <developer>
+     <name>Yong Zhu</name>
+     <email>yong9981@gmail.com</email>
+     <url>https://github.com/drinkjava2/</url>
+   </developer>
+ </developers>
+
+ <scm>
+   <connection>scm:git@github.com:drinkjava2/myfat.git</connection>
+   <developerConnection>scm:git@github.com:drinkjava2/myfat.git</developerConnection>
+   <url>git@github.com:drinkjava2/myfat.git</url>
+ </scm>
+  
+  
+<properties>
+        <version.java>1.8</version.java>
+        <version.javadoc>8</version.javadoc>
+        <version.compiler-plugin>3.3</version.compiler-plugin>
+        <version.war-plugin>2.6</version.war-plugin>
+        <version.clean-plugin>3.0.0</version.clean-plugin>
+        <version.resources-plugin>2.7</version.resources-plugin>
+        <version.surefire-plugin>2.19</version.surefire-plugin>
+        <version.jar-plugin>2.6</version.jar-plugin>
+        <version.source-plugin>2.4</version.source-plugin>
+        <version.javadoc-plugin>2.10.3</version.javadoc-plugin>
+        <version.gpg-plugin>1.6</version.gpg-plugin> 
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+ 
+ </properties>
+ 
+ <dependencies> 
+    <dependency>
+      <groupId>com.github.drinkjava2</groupId>
+      <artifactId>jsqlbox-java8</artifactId>
+      <version>2.0.5</version> 
+   </dependency> 
+   
+   <dependency>
+     <groupId>org.mybatis</groupId>
+     <artifactId>mybatis</artifactId>
+     <version>3.4.6</version>
+	 <optional>true</optional>
+   </dependency> 
+   
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency> 
+    
+ </dependencies>
+ 
+ 
+    <build> 
+      <plugins>  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler-plugin}</version>
+                <configuration>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>  
+       </plugins>   
+    </build> 
+    
+    <profiles> 
+    </profiles>  
+
+
+</project>
