@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.ibatis.lang.UsesJava7;
@@ -30,24 +31,34 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * This is a modified class to replace orignial MyBatis's MapperProxy
+ * 
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * @author Yong Zhu
  */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
 	private static final long serialVersionUID = -6424540398559729838L;
 	private final SqlSession sqlSession;
 	private final Class<T> mapperInterface;
-	private final Class<?> entityClass;
+	private final Class<?> mapperEntityClass;
 	private final Map<Method, MapperMethod> methodCache;
 
 	public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethod> methodCache) {
 		this.sqlSession = sqlSession;
 		this.mapperInterface = mapperInterface;
 		this.methodCache = methodCache;
-		ParameterizedType parameterizedType = (ParameterizedType) mapperInterface.getGenericInterfaces()[0];
-		Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-		entityClass = actualTypeArguments[0].getClass();
+		Type[] types = mapperInterface.getGenericInterfaces();
+		if (types.length == 0) {
+			mapperEntityClass = null;
+			return;
+		}
+		if (types[0] instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) types[0];
+			mapperEntityClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+		} else
+			mapperEntityClass = null;
 	}
 
 	@Override
@@ -57,8 +68,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 				return method.invoke(this, args);
 			} else if ("getSqlSession".equals(method.getName())) {
 				return sqlSession;
-			} else if ("getEntityClass".equals(method.getName())) {
-				return entityClass;
+			} else if ("getMapperEntityClass".equals(method.getName())) {
+				return mapperEntityClass;
 			} else if (isDefaultMethod(method)) {
 				return invokeDefaultMethod(proxy, method, args);
 			}

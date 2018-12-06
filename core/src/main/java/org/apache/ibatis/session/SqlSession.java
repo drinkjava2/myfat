@@ -390,21 +390,21 @@ public interface SqlSession extends Closeable {
 		return ctx;
 	}
 
-	public default void setPagin(int pageNo, int pageSize) {
+	public default void page(int pageNo, int pageSize) {
 		Configuration cfg = getConfiguration();
 		Environment env = cfg.getEnvironment();
 		DataSource ds = env.getDataSource();
 		PaginInterceptor.set(pageNo, pageSize, GuessDialectUtils.guessDialect(ds), false);
 	}
 
-	public default void setPaginAndTrans(int pageNo, int pageSize) {
+	public default void pageAndTrans(int pageNo, int pageSize) {
 		Configuration cfg = getConfiguration();
 		Environment env = cfg.getEnvironment();
 		DataSource ds = env.getDataSource();
 		PaginInterceptor.set(pageNo, pageSize, GuessDialectUtils.guessDialect(ds), true);
 	}
 
-	public default void RemovePagin(int pageNo, int pageSize) {
+	public default void noPage() {
 		PaginInterceptor.remove();
 	}
 

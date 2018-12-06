@@ -1,6 +1,6 @@
 package com.github.drinkjava2.myfat;
 
-import static com.github.drinkjava2.jdbpro.JDBPRO.ques;
+import static com.github.drinkjava2.jdbpro.JDBPRO.*;
 import static com.github.drinkjava2.jsqlbox.JSQLBOX.tail;
 
 import java.util.List;
@@ -17,56 +17,30 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.drinkjava2.jdialects.annotation.jpa.Table;
+import com.github.drinkjava2.jsqlbox.ActiveEntity;
 import com.github.drinkjava2.jsqlbox.SqlBoxContext;
 import com.github.drinkjava2.jsqlbox.Tail;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class TestDemo {
 
-	public static class DemoUser {
-		String firstName;
-		String lastName;
-		Integer age;
-
-		public String getFirstName() {
-			return firstName;
-		}
-
-		public void setFirstName(String firstName) {
-			this.firstName = firstName;
-		}
-
-		public String getLastName() {
-			return lastName;
-		}
-
-		public void setLastName(String lastName) {
-			this.lastName = lastName;
-		}
-
-		public Integer getAge() {
-			return age;
-		}
-
-		public void setAge(Integer age) {
-			this.age = age;
-		}
-
-	}
+	//@formatter:off
+	@Table(name="users")
+	public static class DemoUser implements ActiveEntity<DemoUser> {
+		String firstName, lastName; Integer age;
+		public String getFirstName() { return firstName; }
+		public void setFirstName(String firstName) { this.firstName = firstName; }
+		public String getLastName() { return lastName;}
+		public void setLastName(String lastName) {this.lastName = lastName;}
+		public Integer getAge() {return age;}
+		public void setAge(Integer age) {this.age = age;}
+	} //@formatter:on
 
 	public static interface UserMapper extends RootMapper<DemoUser> {
 		@Select("select concat(firstName, ' ', lastName) as USERNAME, age as AGE from users where age>#{age}")
 		List<Map<String, Object>> getOlderThan(int age);
 	}
-
-	// public static void main(String[] args) {
-	// ParameterizedType parameterizedType =
-	// (ParameterizedType)UserMapper.class.getGenericInterfaces()[0];
-	// Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-	// for (Type actualTypeArgument : actualTypeArguments) {
-	// System.out.println(actualTypeArgument);
-	// }
-	// }
 
 	private SqlSessionFactory ConfigSqlSessionFactory() {
 		HikariDataSource dataSource = new HikariDataSource();// DataSource
@@ -100,23 +74,31 @@ public class TestDemo {
 		SqlSession session = null;
 		try {
 			session = ConfigSqlSessionFactory().openSession();
-			// Session有了增强的SQL方法，见jSqlBox的inlineSql写法
+
+			// MyBatis的Session有了增强的SQL方法，jSqlBox中的pinte系列方法可以用
 			Assert.assertEquals(50, session.iQueryForLongValue("select count(*) from users where age>", ques(50),
 					" and age <= ", ques(100)));
 			List<Map<String, Object>> users;
-
-			// Mapper也可以分页了，取第2页，每页10个
-			session.setPagin(2, 10);
 			UserMapper mapper = session.getMapper(UserMapper.class);
-			users = mapper.getOlderThan(50);
-			Assert.assertEquals(10, users.size());
 
-			// 如果Mapper继承于通用RootMapper，就也有增强的SQL方法了
+			// 对任意MyBatis查询都可以分页了，无侵入性
+			session.page(2, 10); // 也可以写成mapper.page(2,10)
+			try {
+				users = mapper.getOlderThan(50);
+				Assert.assertEquals(10, users.size());
+			} finally {
+				session.noPage(); // 消除分页设定，也可以写成mapper.noPage()
+			}
+
+			// mapper也有增强的SQL方法了，pintea系列方法都可以用
+			Assert.assertEquals(50, mapper.eCountAll(DemoUser.class, " where age>?", param(50)));
+			Assert.assertEquals(50, mapper.countAll(" where age>", ques(50)));
+
+			// Tail也出现在mapper中了
 			Assert.assertEquals(100, mapper.eCountAll(Tail.class, tail("users")));
-			Assert.assertEquals(100, mapper.eCountAll());
 
-			// 这是jSqlBox的ActiveRecord用法
-			Assert.assertEquals(50, new Tail().countAll(tail("users"), " where age>50"));
+			// ActiveRecord写法当然有，但和MyBatis没有一毛钱关系了
+			Assert.assertEquals(50, new DemoUser().countAll(" where age>50"));
 
 			for (Map<String, Object> map : users)
 				System.out.println("UserName=" + map.get("USERNAME") + ", age=" + map.get("AGE"));

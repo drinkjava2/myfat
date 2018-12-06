@@ -20,7 +20,7 @@ public interface RootMapper<M> {
 
 	public SqlSession getSqlSession();
 	
-	public Class<M> getEntityClass(); 
+	public Class<M> getMapperEntityClass(); 
 	
 
 	public default SqlBoxContext ctx() {
@@ -107,31 +107,39 @@ public interface RootMapper<M> {
 	public default <T> T tExecute(Object... items) {return ctx().tExecute(items);}
 	public default <T> List<T> tQueryForEntityList(Class<T> entityClass, Object... items) {return ctx().tQueryForEntityList(entityClass, items); }
  
-  	// e series methods from jSqlBox
- 
-	
-	public default List<M> eFindAll(Object... items) {return ctx().eFindAll(getEntityClass(), items);}
-	public default List<M> eFindBySample(Object sampleBean, Object... items) {return ctx().eFindBySample(sampleBean, items);}
-	public default List<M> eFindBySQL(Object... items) {return ctx().eFindBySQL(getEntityClass(), items);}   
-	public default   M eInsert(M entity, Object... items) {return ctx().eInsert(entity, items);} 
-	public default   M eLoad(M entity, Object... items) {return ctx().eLoad(entity, items);} 
-	public default   M eLoadById(  Object entityId, Object... items) {return ctx().eLoadById(getEntityClass(), entityId, items);}
-	public default  M eLoadByIdTry(  Object entityId, Object... items) {return ctx().eLoadByIdTry(getEntityClass(), entityId, items);}
-	public default M eLoadBySQL(Object... items) {return ctx().eLoadBySQL(items);}	
-	public default M eUpdate(Object entity, Object... items) {return ctx().eUpdate(entity, items);}
+	//e series methods from jSqlBox
+	public default <T> List<T> eFindAll(Class<T> entityClass, Object... items) {return ctx().eFindAll(entityClass, items);}
+	public default <T> List<T> eFindBySample(Object sampleBean, Object... items) {return ctx().eFindBySample(sampleBean, items);}
+	public default <T> List<T> eFindBySQL(Object... items) {return ctx().eFindBySQL(items);}   
+	public default <T> T eInsert(T entity, Object... items) {return ctx().eInsert(entity, items);} 
+	public default <T> T eLoad(T entity, Object... items) {return ctx().eLoad(entity, items);} 
+	public default <T> T eLoadById(Class<T> entityClass, Object entityId, Object... items) {return ctx().eLoadById(entityClass, entityId, items);}
+	public default <T> T eLoadByIdTry(Class<T> entityClass, Object entityId, Object... items) {return ctx().eLoadByIdTry(entityClass, entityId, items);}
+	public default <T> T eLoadBySQL(Object... items) {return ctx().eLoadBySQL(items);}	
+	public default <T> T eUpdate(Object entity, Object... items) {return ctx().eUpdate(entity, items);}
 	public default boolean eExist(Object entity, Object... items) {return ctx().eExist(entity, items);}
-	public default boolean eExistById(  Object id, Object... items) {return ctx().eExistById(getEntityClass(), id, items);}
-	public default int eCountAll(  Object... items) {return ctx().eCountAll(getEntityClass(), items);}
-	public default int eDeleteByIdTry(  Object id, Object... items) {return ctx().eDeleteByIdTry(getEntityClass(), id, items);}
+	public default boolean eExistById(Class<?> entityClass, Object id, Object... items) {return ctx().eExistById(entityClass, id, items);}
+	public default int eCountAll(Class<?> entityClass, Object... items) {return ctx().eCountAll(entityClass, items);}
+	public default int eDeleteByIdTry(Class<?> entityClass, Object id, Object... items) {return ctx().eDeleteByIdTry(entityClass, id, items);}
 	public default int eDeleteTry(Object entity, Object... items) {return ctx().eDeleteTry(entity, items);}
 	public default int eLoadTry(Object entity, Object... items) {return ctx().eLoadTry(entity, items);}
 	public default int eUpdateTry(Object entity, Object... items) {return ctx().eUpdateTry(entity, items);}
 	public default void eDelete(Object entity, Object... items) { ctx().eDelete(entity, items);}
-	public default void eDeleteById(  Object id, Object... items) {ctx().eDeleteById(getEntityClass(), id, items);}
+	public default void eDeleteById(Class<?> entityClass, Object id, Object... items) {ctx().eDeleteById(entityClass, id, items);}
 	public default EntityNet eAutoNet(Class<?>... entityClass) {return  ctx().autoNet(entityClass);}
 	public default <T> T eFindRelatedOne(Object entity, Object... sqlItems) {return  ctx().eFindRelatedOne(entity, sqlItems);}
 	public default <T> List<T> eFindRelatedList(Object entityOrIterable, Object... sqlItems) {return  ctx().eFindRelatedList(entityOrIterable, sqlItems);}
 	public default <T> Set<T> eFindRelatedSet(Object entity, Object... sqlItems) {return  ctx().eFindRelatedSet(entity, sqlItems);}
 	public default <T> Map<Object, T> eFindRelatedMap(Object entity, Object... sqlItems) {return  ctx().eFindRelatedMap(entity, sqlItems);}
+		
+  	//activeRecord series methods from jSqlBox
+	public default boolean existById(  Object id, Object... items) {return ctx().eExistById(getMapperEntityClass(), id, items);}
+	public default int countAll(  Object... items) {return ctx().eCountAll(getMapperEntityClass(), items);}
+	public default int deleteByIdTry(  Object id, Object... items) {return ctx().eDeleteByIdTry(getMapperEntityClass(), id, items);}
+	public default void deleteById(  Object id, Object... items) {ctx().eDeleteById(getMapperEntityClass(), id, items);}
+	public default List<M> findAll(Object... items) {return ctx().eFindAll(getMapperEntityClass(), items);}
+	public default List<M> findBySQL(Object... items) {return ctx().eFindBySQL(getMapperEntityClass(), items);}
+	public default M loadById(  Object entityId, Object... items) {return ctx().eLoadById(getMapperEntityClass(), entityId, items);}
+	public default M loadByIdTry(  Object entityId, Object... items) {return ctx().eLoadByIdTry(getMapperEntityClass(), entityId, items);}  
 	
 }
