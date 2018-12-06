@@ -1,7 +1,5 @@
 package com.github.drinkjava2.myfat;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,8 @@ public interface RootMapper<M> {
 
 	public SqlSession getSqlSession();
 	
-	public Class<M> getMapperInterface();
+	public Class<M> getEntityClass(); 
+	
 
 	public default SqlBoxContext ctx() {
 		SqlSession session = getSqlSession();
@@ -109,33 +108,26 @@ public interface RootMapper<M> {
 	public default <T> List<T> tQueryForEntityList(Class<T> entityClass, Object... items) {return ctx().tQueryForEntityList(entityClass, items); }
  
   	// e series methods from jSqlBox
-	public default Class<M> getEntityClass(){
-		ParameterizedType parameterizedType = (ParameterizedType)this.getClass().getGenericInterfaces()[0];
-		Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-		for (Type actualTypeArgument : actualTypeArguments) {
-		    System.out.println(actualTypeArgument);
-		} 
-		return null;
-	}
+ 
 	
-	public default List<M> eFindAll(Object... items) {return ctx().eFindAll(getMapperInterface(), items);}
+	public default List<M> eFindAll(Object... items) {return ctx().eFindAll(getEntityClass(), items);}
 	public default List<M> eFindBySample(Object sampleBean, Object... items) {return ctx().eFindBySample(sampleBean, items);}
-	public default List<M> eFindBySQL(Object... items) {return ctx().eFindBySQL(getMapperInterface(), items);}   
+	public default List<M> eFindBySQL(Object... items) {return ctx().eFindBySQL(getEntityClass(), items);}   
 	public default   M eInsert(M entity, Object... items) {return ctx().eInsert(entity, items);} 
 	public default   M eLoad(M entity, Object... items) {return ctx().eLoad(entity, items);} 
-	public default   M eLoadById(  Object entityId, Object... items) {return ctx().eLoadById(getMapperInterface(), entityId, items);}
-	public default  M eLoadByIdTry(  Object entityId, Object... items) {return ctx().eLoadByIdTry(getMapperInterface(), entityId, items);}
+	public default   M eLoadById(  Object entityId, Object... items) {return ctx().eLoadById(getEntityClass(), entityId, items);}
+	public default  M eLoadByIdTry(  Object entityId, Object... items) {return ctx().eLoadByIdTry(getEntityClass(), entityId, items);}
 	public default M eLoadBySQL(Object... items) {return ctx().eLoadBySQL(items);}	
 	public default M eUpdate(Object entity, Object... items) {return ctx().eUpdate(entity, items);}
 	public default boolean eExist(Object entity, Object... items) {return ctx().eExist(entity, items);}
-	public default boolean eExistById(  Object id, Object... items) {return ctx().eExistById(getMapperInterface(), id, items);}
-	public default int eCountAll(  Object... items) {return ctx().eCountAll(getMapperInterface(), items);}
-	public default int eDeleteByIdTry(  Object id, Object... items) {return ctx().eDeleteByIdTry(getMapperInterface(), id, items);}
+	public default boolean eExistById(  Object id, Object... items) {return ctx().eExistById(getEntityClass(), id, items);}
+	public default int eCountAll(  Object... items) {return ctx().eCountAll(getEntityClass(), items);}
+	public default int eDeleteByIdTry(  Object id, Object... items) {return ctx().eDeleteByIdTry(getEntityClass(), id, items);}
 	public default int eDeleteTry(Object entity, Object... items) {return ctx().eDeleteTry(entity, items);}
 	public default int eLoadTry(Object entity, Object... items) {return ctx().eLoadTry(entity, items);}
 	public default int eUpdateTry(Object entity, Object... items) {return ctx().eUpdateTry(entity, items);}
 	public default void eDelete(Object entity, Object... items) { ctx().eDelete(entity, items);}
-	public default void eDeleteById(  Object id, Object... items) {ctx().eDeleteById(getMapperInterface(), id, items);}
+	public default void eDeleteById(  Object id, Object... items) {ctx().eDeleteById(getEntityClass(), id, items);}
 	public default EntityNet eAutoNet(Class<?>... entityClass) {return  ctx().autoNet(entityClass);}
 	public default <T> T eFindRelatedOne(Object entity, Object... sqlItems) {return  ctx().eFindRelatedOne(entity, sqlItems);}
 	public default <T> List<T> eFindRelatedList(Object entityOrIterable, Object... sqlItems) {return  ctx().eFindRelatedList(entityOrIterable, sqlItems);}
