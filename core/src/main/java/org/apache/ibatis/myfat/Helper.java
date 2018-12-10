@@ -1,4 +1,19 @@
-package com.github.drinkjava2.myfat;
+/*
+ *    Copyright 2016-2019 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.apache.ibatis.myfat;
 
 import java.util.Properties;
 
@@ -17,18 +32,21 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.github.drinkjava2.jdialects.Dialect;
 
-// JDialectsPlugin is a MyBatis plug, referenced this article:
+// This is a MyBatis plugin, referenced this article:
 // https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/Interceptor.md
+
 @Intercepts({
 		@Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
 				RowBounds.class, ResultHandler.class }),
 		@Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
 				RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class }), })
-public class PaginInterceptor implements Interceptor {
+public class Helper implements Interceptor {
+	private static Dialect dialect = Dialect.MySQLDialect;
+	public static final Helper instance = new Helper();
 	public static ThreadLocal<Object[]> paginData = new ThreadLocal<Object[]>();
 
 	/**
-	 * Set pagination data
+	 * will do paginate for next query
 	 * 
 	 * @param pageNo
 	 *            the page No., started from 0
@@ -36,14 +54,36 @@ public class PaginInterceptor implements Interceptor {
 	 *            the size for each page
 	 * @param dialect
 	 *            the jDialect dialect instance
-	 * @param translate
-	 *            if need translate functions
 	 */
-	public static void set(int pageNo, int pageSize, Dialect dialect, boolean translate) {
-		paginData.set(new Object[] { pageNo, pageSize, dialect, translate });
+	public static void pagin(int pageNo, int pageSize) {
+		paginData.set(new Object[] { pageNo, pageSize, dialect, false });
 	}
 
-	public static void remove() {
+	/**
+	 * Will do translate for next query
+	 */
+	public static void trans() {
+		paginData.set(new Object[] { 0, 0, dialect, true });
+	}
+
+	/**
+	 * Will do paginate and translate for next query
+	 * 
+	 * @param pageNo
+	 *            the page No., started from 0
+	 * @param pageSize
+	 *            the size for each page
+	 * @param dialect
+	 *            the jDialect dialect instance
+	 */
+	public static void paginAndTrans(int pageNo, int pageSize) {
+		paginData.set(new Object[] { pageNo, pageSize, dialect, true });
+	}
+
+	/**
+	 * clear pagin and translate setting
+	 */
+	public static void clear() {
 		paginData.remove();
 	}
 
@@ -79,7 +119,9 @@ public class PaginInterceptor implements Interceptor {
 		if (pageNo != -1) {// if paginInfo exist in threadlocal
 			Configuration configuration = ms.getConfiguration();
 			String pagedSql;
-			if (translateFunction)
+			if (translateFunction && pageNo == 0)
+				pagedSql = dialect.trans(boundSql.getSql());
+			else if (translateFunction && pageNo != 0)
 				pagedSql = dialect.paginAndTrans(pageNo, pageSize, boundSql.getSql());
 			else
 				pagedSql = dialect.pagin(pageNo, pageSize, boundSql.getSql());
@@ -98,4 +140,11 @@ public class PaginInterceptor implements Interceptor {
 	public void setProperties(Properties properties) {
 	}
 
+	public static Dialect getDialect() {
+		return dialect;
+	}
+
+	public static void setDialect(Dialect dialect) {
+		Helper.dialect = dialect;
+	}
 }

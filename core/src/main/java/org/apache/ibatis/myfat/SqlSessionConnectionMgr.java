@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.github.drinkjava2.myfat;
+package org.apache.ibatis.myfat;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,10 +25,10 @@ import org.apache.ibatis.session.SqlSession;
 import com.github.drinkjava2.jtransactions.ConnectionManager;
 
 /**
- * The primary Java interface for working with MyBatis. Through this interface
- * you can execute commands, get mappers and manage transactions.
+ * SqlSessionConnectionMgr use the connection from MyBatis's SqlSession
  *
- * @author Clinton Begin
+ * @author Yong Zhu
+ * @since 1.0.0
  */
 public class SqlSessionConnectionMgr implements ConnectionManager {
 	private SqlSession session;
@@ -51,4 +51,5 @@ public class SqlSessionConnectionMgr implements ConnectionManager {
 	public void releaseConnection(Connection arg0, DataSource arg1) throws SQLException {
 		// do nothing
 	}
+ 
 }

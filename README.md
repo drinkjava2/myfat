@@ -45,7 +45,7 @@ MyFat是MyBatis的DAO功能增强插件，利用全功能持久层工具jSqlBox�
 <dependency>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis</artifactId>
-    <version>3.4.6</version>  
+    <version>3.4.6</version> <!--或最新版--> 
 </dependency> 
 ```
  

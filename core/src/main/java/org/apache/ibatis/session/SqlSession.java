@@ -1,5 +1,5 @@
-/**
- *    Copyright 2009-2016 the original author or authors.
+/*
+ *    Copyright 2016-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,12 +27,10 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.myfat.SqlSessionConnectionMgr;
 
-import com.github.drinkjava2.jdialects.GuessDialectUtils;
 import com.github.drinkjava2.jsqlbox.SqlBoxContext;
 import com.github.drinkjava2.jsqlbox.entitynet.EntityNet;
-import com.github.drinkjava2.myfat.PaginInterceptor;
-import com.github.drinkjava2.myfat.SqlSessionConnectionMgr;
 
 /**
  * The primary Java interface for working with MyBatis. Through this interface
@@ -379,7 +377,7 @@ public interface SqlSession extends Closeable {
 	 */
 	Connection getConnection();
 
-	// ===========Below are MyFat project code =======
+	// ===========Below are added by YZ for MyFat plugin =======
 	public default SqlBoxContext ctx() {
 		Configuration cfg = getConfiguration();
 		Environment env = cfg.getEnvironment();
@@ -389,25 +387,7 @@ public interface SqlSession extends Closeable {
 		ctx.setConnectionManager(cm);
 		return ctx;
 	}
-
-	public default void page(int pageNo, int pageSize) {
-		Configuration cfg = getConfiguration();
-		Environment env = cfg.getEnvironment();
-		DataSource ds = env.getDataSource();
-		PaginInterceptor.set(pageNo, pageSize, GuessDialectUtils.guessDialect(ds), false);
-	}
-
-	public default void pageAndTrans(int pageNo, int pageSize) {
-		Configuration cfg = getConfiguration();
-		Environment env = cfg.getEnvironment();
-		DataSource ds = env.getDataSource();
-		PaginInterceptor.set(pageNo, pageSize, GuessDialectUtils.guessDialect(ds), true);
-	}
-
-	public default void noPage() {
-		PaginInterceptor.remove();
-	}
-
+  
 	//@formatter:off
  
 	// p series methods from jSqlBox

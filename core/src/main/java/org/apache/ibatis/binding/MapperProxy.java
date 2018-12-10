@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.ibatis.lang.UsesJava7;
@@ -64,6 +63,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		try {
+			//Modified by YZ
 			if (Object.class.equals(method.getDeclaringClass())) {
 				return method.invoke(this, args);
 			} else if ("getSqlSession".equals(method.getName())) {
