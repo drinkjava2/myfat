@@ -8,12 +8,24 @@ call mvn clean
 call mvn eclipse:clean
 cd..
 
+cd puremybatistest
+call mvn clean
+call mvn eclipse:clean
+cd..
+
 cd myfattest
 call del maven-eclipse.xml 
-
 cd .externalToolBuilders
 call del *.launch
-
 cd .. 
 call rd .externalToolBuilders
 cd ..
+
+cd puremybatistest
+call del maven-eclipse.xml 
+cd .externalToolBuilders
+call del *.launch
+cd .. 
+call rd .externalToolBuilders
+cd ..
+
