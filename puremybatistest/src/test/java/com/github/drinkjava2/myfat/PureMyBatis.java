@@ -52,12 +52,12 @@ public class PureMyBatis {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 		// 以上4行完成MyBatis的配置
 
-		SqlSession session = sqlSessionFactory.openSession(false);
+		SqlSession session = sqlSessionFactory.openSession();
 		try {
 			UserMapper mapper = session.getMapper(UserMapper.class);
 			mapper.insertOneUser("1");
 			mapper.insertOneUser("2");
-			Assert.assertEquals(102, mapper.countAll());
+			Assert.assertEquals(102, mapper.countAllUser());
 			System.out.println(1 / 0);// 测试事务回滚
 		} catch (Exception e) {
 			System.out.println("Exception:" + e.getMessage());
