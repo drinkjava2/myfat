@@ -52,9 +52,7 @@
         <version.gpg-plugin>1.6</version.gpg-plugin> 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        
-        <spring.version>4.3.14.RELEASE</spring.version>
- 
+        <spring.version>4.3.14.RELEASE</spring.version> 
  </properties>
  
  <dependencies> 
@@ -130,7 +128,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.compiler-plugin}</version>
+                <version>3.3</version>
                 <configuration>
                     <source>${version.java}</source>
                     <target>${version.java}</target>
@@ -141,7 +139,7 @@
     </build> 
     
     <profiles> 
-    </profiles>  
+  </profiles>  
 
 
 </project>

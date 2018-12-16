@@ -3,12 +3,14 @@ call mvn clean
 call mvn eclipse:clean
 cd..
 
+cd demo
+
 cd myfattest
 call mvn clean
 call mvn eclipse:clean
 cd..
 
-cd puremybatistest
+cd myfat-springboot
 call mvn clean
 call mvn eclipse:clean
 cd..
@@ -21,7 +23,7 @@ cd ..
 call rd .externalToolBuilders
 cd ..
 
-cd puremybatistest
+cd myfat-springboot
 call del maven-eclipse.xml 
 cd .externalToolBuilders
 call del *.launch
