@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion> 
 	<groupId>com.example</groupId>
 	<artifactId>myfat-springboot</artifactId>
-	<version>1.0</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>myfat-springboot</name>
@@ -28,7 +28,7 @@
        <dependency>
          <groupId>com.github.drinkjava2</groupId>
          <artifactId>myfat</artifactId>
-         <version>1.0</version><!--Or newest jSqlBox -->
+         <version>1.0.0</version><!--Or newest jSqlBox -->
        </dependency> 
 	   
 		<dependency>

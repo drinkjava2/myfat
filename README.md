@@ -28,11 +28,11 @@ MyFat是MyBatis的DAO功能增强插件，利用全功能持久层工具jSqlBox�
    跨数据库分页、DDl生成、实体源码生成、函数变换、主键生成、多种SQL写法、DataMapper、ActiveRecord、Tail、实体越级关联查询、主从、分库分表等。  
 3. 架构更合理，它不是基于MyBatis内核开发，而是整合了jSqlBox的功能，项目本身是模块式开发，可维护性好。  
 
-## 与其它Mybatis插件的区别 
+## 与其它Mybatis插件如Mapper或MyBatis-Plus的区别 
 1. 源码少，MyFat本身不提供DAO功能，源码只有7个类，起到粘合剂的作用，jar包大小25k。
 2. ActiveRecord可以只声明接口（Java8），不一定需要继承类，也不需要定义Mapper，更无侵入性。
 3. 它没有专门的分页方法，但是所有SQL查询都可以分页，无侵入性。 
-4. 支持的SQL写法更多，如参数内嵌式SQL写法、实体越级关联查询等。
+4. 支持的SQL写法更多，如参数内嵌式SQL写法、实体越级关联查询等，实体类更符合JPA注解。
 
 
 ## 文档 | Documentation

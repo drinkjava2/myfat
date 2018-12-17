@@ -4,7 +4,7 @@
  
  <groupId>com.github.drinkjava2</groupId>
  <artifactId>myfattest</artifactId>
- <version>1.0</version>
+ <version>1.0.0</version>
  <packaging>jar</packaging> 
  
  <name>myfattest</name>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.github.drinkjava2</groupId>
       <artifactId>myfat</artifactId>
-      <version>1.0</version> 
+      <version>1.0.0</version> 
    </dependency> 
    
    <dependency>
