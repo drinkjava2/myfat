@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,95 +20,59 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.apache.ibatis.lang.UsesJava7;
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * This is a modified class to replace orignial MyBatis's MapperProxy
- * 
  * @author Clinton Begin
  * @author Eduardo Macarron
- * @author Yong Zhu
  */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
-	private static final long serialVersionUID = -6424540398559729838L;
-	private final SqlSession sqlSession;
-	private final Class<T> mapperInterface;
-	private final Class<?> mapperEntityClass;
-	private final Map<Method, MapperMethod> methodCache;
+  private static final long serialVersionUID = -6424540398559729838L;
+  private final SqlSession sqlSession;
+  private final Class<T> mapperInterface;
+  private final Map<Method, MapperMethod> methodCache;
 
-	public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethod> methodCache) {
-		this.sqlSession = sqlSession;
-		this.mapperInterface = mapperInterface;
-		this.methodCache = methodCache;
-		Type[] types = mapperInterface.getGenericInterfaces();
-		if (types.length == 0) {
-			mapperEntityClass = null;
-			return;
-		}
-		if (types[0] instanceof ParameterizedType) {
-			ParameterizedType parameterizedType = (ParameterizedType) types[0];
-			mapperEntityClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-		} else
-			mapperEntityClass = null;
-	}
+  public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethod> methodCache) {
+    this.sqlSession = sqlSession;
+    this.mapperInterface = mapperInterface;
+    this.methodCache = methodCache;
+  }
 
-	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		try {
-			//Modified by YZ
-			if (Object.class.equals(method.getDeclaringClass())) {
-				return method.invoke(this, args);
-			} else if ("getSqlSession".equals(method.getName())) {
-				return sqlSession;
-			} else if ("getMapperEntityClass".equals(method.getName())) {
-				return mapperEntityClass;
-			} else if (isDefaultMethod(method)) {
-				return invokeDefaultMethod(proxy, method, args);
-			}
-		} catch (Throwable t) {
-			throw ExceptionUtil.unwrapThrowable(t);
-		}
-		final MapperMethod mapperMethod = cachedMapperMethod(method);
-		return mapperMethod.execute(sqlSession, args);
-	}
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    try {
+      if (Object.class.equals(method.getDeclaringClass())) {
+        return method.invoke(this, args);
+      } else if (method.isDefault()) {
+        return invokeDefaultMethod(proxy, method, args);
+      }
+    } catch (Throwable t) {
+      throw ExceptionUtil.unwrapThrowable(t);
+    }
+    final MapperMethod mapperMethod = cachedMapperMethod(method);
+    return mapperMethod.execute(sqlSession, args);
+  }
 
-	private MapperMethod cachedMapperMethod(Method method) {
-		MapperMethod mapperMethod = methodCache.get(method);
-		if (mapperMethod == null) {
-			mapperMethod = new MapperMethod(mapperInterface, method, sqlSession.getConfiguration());
-			methodCache.put(method, mapperMethod);
-		}
-		return mapperMethod;
-	}
+  private MapperMethod cachedMapperMethod(Method method) {
+    return methodCache.computeIfAbsent(method, k -> new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
+  }
 
-	@UsesJava7
-	private Object invokeDefaultMethod(Object proxy, Method method, Object[] args) throws Throwable {
-		final Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
-				.getDeclaredConstructor(Class.class, int.class);
-		if (!constructor.isAccessible()) {
-			constructor.setAccessible(true);
-		}
-		final Class<?> declaringClass = method.getDeclaringClass();
-		return constructor
-				.newInstance(declaringClass,
-						MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED | MethodHandles.Lookup.PACKAGE
-								| MethodHandles.Lookup.PUBLIC)
-				.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
-	}
-
-	/**
-	 * Backport of java.lang.reflect.Method#isDefault()
-	 */
-	private boolean isDefaultMethod(Method method) {
-		return (method.getModifiers() & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC
-				&& method.getDeclaringClass().isInterface();
-	}
+  private Object invokeDefaultMethod(Object proxy, Method method, Object[] args)
+      throws Throwable {
+    final Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
+        .getDeclaredConstructor(Class.class, int.class);
+    if (!constructor.isAccessible()) {
+      constructor.setAccessible(true);
+    }
+    final Class<?> declaringClass = method.getDeclaringClass();
+    return constructor
+        .newInstance(declaringClass,
+            MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
+                | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC)
+        .unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
+  }
 }
