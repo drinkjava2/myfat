@@ -4,7 +4,7 @@
  
  <groupId>com.github.drinkjava2</groupId>
  <artifactId>myfat</artifactId>
- <version>1.0.0</version> <!-- myfat1.0.0 = MyBatis 3.4.6+jsqlbox-java8 2.0.5 -->
+ <version>4.0</version> <!-- myfat4.0= MyBatis 3.5.2 + jsqlbox4.0 -->
  <packaging>jar</packaging> 
  
  <name>myfat</name>
@@ -52,14 +52,14 @@
         <version.gpg-plugin>1.6</version.gpg-plugin> 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring.version>4.3.14.RELEASE</spring.version> 
+        <spring.version>5.1.9.RELEASE</spring.version> 
  </properties>
  
  <dependencies> 
     <dependency>
       <groupId>com.github.drinkjava2</groupId>
-      <artifactId>jsqlbox-java8</artifactId>
-      <version>3.0.0</version> 
+      <artifactId>jsqlbox</artifactId>
+      <version>4.0</version> 
    </dependency> 
    
    <dependency>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>org.springframework.batch</groupId>
       <artifactId>spring-batch-infrastructure</artifactId>
-      <version>3.0.9.RELEASE</version>
+      <version>4.1.2.RELEASE</version>
       <optional>true</optional>
     </dependency> 
    

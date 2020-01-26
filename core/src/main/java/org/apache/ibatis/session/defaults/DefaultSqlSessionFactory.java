@@ -22,6 +22,7 @@ import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.myfat.Helper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -33,6 +34,7 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
 /**
  * @author Clinton Begin
+ * @author Yong Zhu
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
@@ -40,7 +42,9 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;
-  }
+	// Modified by YZ
+	this.configuration.addInterceptor(Helper.instance);
+}
 
   @Override
   public SqlSession openSession() {

@@ -25,12 +25,12 @@ MyFat是MyBatis的DAO功能增强插件，利用全功能持久层工具jSqlBox�
 
 1. 无侵入性，对于使用MyBatis的项目唯一要做的只是添加MyFat依赖即可，不用更改任何其它配置文件和代码。  
 2. 功能全，补足了MyBatis不提供CRUD的短板，以下为增强后的功能：  
-   跨数据库分页、DDl生成、实体源码生成、函数变换、主键生成、多种SQL写法、DataMapper、ActiveRecord、Tail、实体越级关联查询、主从、分库分表等。  
+   跨数据库分页、DDl生成、实体源码生成、函数变换、主键生成、多种SQL写法、DataMapper、ActiveRecord、Tail、实体越级关联查询、主从、分库分表、分布式事务等。  
 3. 架构更合理，它不是基于MyBatis内核开发，而是整合了jSqlBox的功能，项目本身是模块式开发，可维护性好。  
 
 ## 与其它Mybatis插件如Mapper或MyBatis-Plus的区别 
 1. 源码少，MyFat本身不提供DAO功能，源码只有7个类，起到粘合剂的作用，jar包大小25k。
-2. ActiveRecord可以只声明接口（Java8），不一定需要继承类，也不需要定义Mapper，更无侵入性。
+2. 由jSqlBox提供的ActiveRecord可以只声明接口（Java8），不一定需要继承类，也不需要定义Mapper，更无侵入性。
 3. 它没有专门的分页方法，但是所有SQL查询都可以分页，无侵入性。 
 4. 支持的SQL写法更多，如参数内嵌式SQL写法、实体越级关联查询等，实体类更符合JPA注解。
 
@@ -45,13 +45,13 @@ MyFat是MyBatis的DAO功能增强插件，利用全功能持久层工具jSqlBox�
 <dependency>
    <groupId>com.github.drinkjava2</groupId>
    <artifactId>myfat</artifactId>
-   <version>1.0</version> <!--或最新版-->
+   <version>3.0.0</version> <!--或最新版-->
 </dependency> 
 
 <dependency>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis</artifactId>
-    <version>3.4.6</version> <!--或最新版--> 
+    <version>3.5.2</version> <!--或最新版--> 
 </dependency> 
 
 ```
@@ -61,7 +61,7 @@ MyFat是MyBatis的DAO功能增强插件，利用全功能持久层工具jSqlBox�
   <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
       <artifactId>mybatis-spring-boot-starter</artifactId>
-	  <version>1.3.2</version> <!--或最新版--> 
+	  <version>2.1.0</version> <!--或最新版--> 
   </dependency>
 ```
  
@@ -101,7 +101,6 @@ public class HelloWorld implements ActiveEntity<HelloWorld> {
 - [一个独立的声明式事务工具 jTransactions](https://gitee.com/drinkjava2/jTransactions)
 - [一个微型IOC/AOP工具 jBeanBox](https://gitee.com/drinkjava2/jBeanBox)
 - [一个服务端布局工具 jWebBox](https://gitee.com/drinkjava2/jWebBox)
-- [人工生命实验项目 frog](https://gitee.com/drinkjava2/frog)
 
 ## 期望 | Futures
 

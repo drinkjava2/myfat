@@ -18,11 +18,10 @@ package org.apache.ibatis.myfat;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.apache.ibatis.session.SqlSession;
 
 import com.github.drinkjava2.jtransactions.ConnectionManager;
+import com.github.drinkjava2.jtransactions.TxResult;
 
 /**
  * SqlSessionConnectionMgr use the connection from MyBatis's SqlSession
@@ -38,18 +37,41 @@ public class SqlSessionConnectionMgr implements ConnectionManager {
 	}
 
 	@Override
-	public Connection getConnection(DataSource arg0) throws SQLException {
-		return session.getConnection();
-	}
-
-	@Override
-	public boolean isInTransaction(DataSource arg0) {
+	public boolean isInTransaction() {
+		// will never call this method
 		return true;
 	}
 
 	@Override
-	public void releaseConnection(Connection arg0, DataSource arg1) throws SQLException {
-		// do nothing
+	public void startTransaction() {
+		// will never call this method
 	}
- 
+
+	@Override
+	public void startTransaction(int txIsolationLevel) {
+		// will never call this method
+	}
+
+	@Override
+	public Connection getConnection(Object dsOrHolder) throws SQLException {
+		return session.getConnection();
+	}
+
+	@Override
+	public void releaseConnection(Connection conn, Object dsOrHolder) throws SQLException {
+		// will never call this method
+	}
+
+	@Override
+	public TxResult commitTransaction() throws Exception {
+		// will never call this method
+		return null;
+	}
+
+	@Override
+	public TxResult rollbackTransaction() {
+		// will never call this method
+		return null;
+	}
+
 }

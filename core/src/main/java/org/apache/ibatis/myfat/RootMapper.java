@@ -30,8 +30,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 
 import com.github.drinkjava2.jbeanbox.ReflectionUtils;
-import com.github.drinkjava2.jsqlbox.SqlBoxContext;
-import com.github.drinkjava2.jsqlbox.SqlBoxException;
+import com.github.drinkjava2.jsqlbox.DbException;
+import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jsqlbox.entitynet.EntityNet;
 
 /**
@@ -45,29 +45,29 @@ public interface RootMapper<M> {
 
 	// ===========Below are added by YZ for MyFat plugin =======
 	/**
-	 * Return a new SqlBoxContext based on current SqlSession's dataSource
+	 * Return a new DbContext based on current SqlSession's dataSource
 	 */
-	public default SqlBoxContext qryCtx() {
+	public default DbContext qryCtx() {
 		SqlSession session = getSqlSession();
 		Configuration cfg = session.getConfiguration();
 		Environment env = cfg.getEnvironment();
 		DataSource ds = env.getDataSource();
-		SqlBoxContext ctx = new SqlBoxContext(ds);
+		DbContext ctx = new DbContext(ds);
 		SqlSessionConnectionMgr cm = new SqlSessionConnectionMgr(session);
 		ctx.setConnectionManager(cm);
 		return ctx;
 	}
 
 	/**
-	 * Return a new SqlBoxContext based on current SqlSession's dataSource, and mark
+	 * Return a new DbContext based on current SqlSession's dataSource, and mark
 	 * sqlsession "dirty" to make it start a transaction
 	 */
-	public default SqlBoxContext ctx() {
+	public default DbContext ctx() {
 		SqlSession session = getSqlSession();
 		if (session instanceof DefaultSqlSession) { 
 			Field f = ReflectionUtils.findField(session.getClass(), "dirty");
 			if (f == null)
-				throw new SqlBoxException("Can not access SqlSession, target:" + session);
+				throw new DbException("Can not access SqlSession, target:" + session);
 			f.setAccessible(true);
 			ReflectionUtils.setField(f, session, true);
 		}
